@@ -31,7 +31,7 @@ permissions:
 
 jobs:
   
-  build:
+  Merge-Updates:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo-A
@@ -51,6 +51,7 @@ jobs:
           path: distributed-repo-base
           token: ${{ secrets.GITHUB_TOKEN }}
 
+
       - name: Check Files 2
         run:  |
             ls -R
@@ -59,21 +60,34 @@ jobs:
         run: |
           cp -r ${{ inputs.Repository }}/${{inputs.TLA}}/* distributed-repo-base/openapi_specifications/
 
-      - name: Configure git
-        run: |
-          cd distributed-repo-base
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
+      # - name: Configure git
+      #   run: |
+      #     cd distributed-repo-base
+      #     git config user.name "github-actions[bot]"
+      #     git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-      - name: Commit changes
+      # - name: Commit changes
+      #   run: |
+      #     cd distributed-repo-base
+      #     git add .
+      #     git commit -m "Sync TLA folder from ${{ inputs.Repository }}"
+
+      - name: Commit files
         run: |
-          cd distributed-repo-base
-          git add .
-          git commit -m "Sync TLA folder from ${{ inputs.Repository }}"
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git commit -a -m "Add changes"
 
       - name: Push changes
         run: |
           cd distributed-repo-base
           git push origin main
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+
+      # - name: Push changes
+      #   uses: ad-m/github-push-action@master
+      #   with:
+      #     github_token: ${{ secrets.GITHUB_TOKEN }}
+      #     branch: ${{ github.ref }}
