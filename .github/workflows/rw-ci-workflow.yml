@@ -49,8 +49,6 @@ jobs:
         with:
           repository: Lamintun/distributed-repo-base
           path: distributed-repo-base
-          ssh-key: ${{ secrets.SSH_KEY }}
-          persist-credentials: true
 
       - name: Check Files 2
         run:  |
@@ -80,22 +78,21 @@ jobs:
       #     github_token: ${{ secrets.GITHUB_TOKEN }}
 
 
-      - name: Commit files
+      - name: Commit and Push changes
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_KEY }}
         run: |
-          echo "${{ github.ref }}"
-          cd distributed-repo-base
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+  
+          # Prepare the SSH command with the private key
+          SSH_COMMAND="ssh -i <(echo \"$SSH_PRIVATE_KEY\") -o IdentitiesOnly=yes -o StrictHostKeyChecking=no"
+  
+          # Change to the specific directory
+          cd ./distributed-repo-base
+  
+          # Stage, commit, and push changes
           git add .
-          git commit -m "Sync TLA folder from ${{ inputs.Repository }}"
-          # git push origin main
-        # env:
-        #   ssh-key: ${{ secrets.SSH_KEY }}
-
-
-      - name: Push changes
-        uses: ad-m/github-push-action@master
-        with:
-          ssh: true
-          directory: ./distributed-repo-base
-          repository: Lamintun/distributed-repo-base
+          git commit -m "Commit message"
+          git remote set-url origin git@github.com:Lamintun/distributed-repo-base.git
+          GIT_SSH_COMMAND="$SSH_COMMAND" git push origin main
