@@ -85,7 +85,8 @@ jobs:
           cd distributed-repo-base
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          git commit -a -m "Add changes"
+          git add .
+          git commit -m "Sync TLA folder from ${{ inputs.Repository }}"
           git push origin main
         env:
           github_token: ${{ secrets.GITHUB_TOKEN }}        
