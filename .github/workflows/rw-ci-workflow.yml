@@ -1,6 +1,18 @@
 name: CI
 
 on:
+  workflow_dispatch: 
+    inputs:
+      TLA:
+        description: 'TLA of API owners'
+        type: string
+        required: true
+
+      Repository:
+        description: 'The Repo name of API owners'
+        type: string
+        required: true   
+
   workflow_call: 
     inputs:
       TLA:
