@@ -35,7 +35,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo-A
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           repository: ${{inputs.Repository}}
           path: ${{inputs.Repository}}          
@@ -44,11 +44,19 @@ jobs:
         run:  |
           ls -R
 
-      - name: Checkout repo-base
-        uses: actions/checkout@v2
+      # - name: Checkout repo-base
+      #   uses: actions/checkout@v2
+      #   with:
+      #     repository: Lamintun/distributed-repo-base
+      #     path: distributed-repo-base
+      #     persist-credentials: true
+
+      - uses: actions/checkout@v4
         with:
           repository: Lamintun/distributed-repo-base
           path: distributed-repo-base
+          ssh-key: ${{ secrets.SSH_KEY }}
+          persist-credentials: true
 
       - name: Check Files 2
         run:  |
@@ -58,17 +66,17 @@ jobs:
         run: |
           cp -r ${{ inputs.Repository }}/${{inputs.TLA}}/* distributed-repo-base/openapi_specifications/
 
-      # - name: Configure git
-      #   run: |
-      #     cd distributed-repo-base
-      #     git config user.name "github-actions[bot]"
-      #     git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+      - name: Configure git
+        run: |
+          cd distributed-repo-base
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
 
-      # - name: Commit changes
-      #   run: |
-      #     cd distributed-repo-base
-      #     git add .
-      #     git commit -m "Sync TLA folder from ${{ inputs.Repository }}"
+      - name: Commit changes
+        run: |
+          cd distributed-repo-base
+          git add .
+          git commit -m "Sync TLA folder from ${{ inputs.Repository }}"
 
       # - name: Push changes
       #   run: |
@@ -77,25 +85,15 @@ jobs:
       #   env:
       #     github_token: ${{ secrets.GITHUB_TOKEN }}
 
-      # git config --global user.email "github-actions[bot]@users.noreply.github.com"
-      # git config --global user.name "github-actions[bot]"
-      # git remote set-url origin git@github.com:Lamintun/distributed-repo-base.git
+      # - name: Commit files
+      #   run: |
+      #     git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+      #     git config --local user.name "github-actions[bot]"
+      #     git commit -a -m "Add changes"
 
-      - name: Commit and Push changes
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_KEY }}
-        run: |
-          mkdir -p ~/.ssh
-          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan github.com >> ~/.ssh/known_hosts
-
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git config --global user.name "github-actions[bot]"
-
-          cd ./distributed-repo-base
-
-          git add .
-          git commit -m "Commit message"
-
-          GIT_SSH_COMMAND="ssh -i ~/.ssh/id_rsa -o IdentitiesOnly=yes -o StrictHostKeyChecking=no" git push origin main
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          ssh: true
+          repository: Lamintun/distributed-repo-base
+          directory: distributed-repo-base
