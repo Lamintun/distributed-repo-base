@@ -77,6 +77,9 @@ jobs:
       #   env:
       #     github_token: ${{ secrets.GITHUB_TOKEN }}
 
+      # git config --global user.email "github-actions[bot]@users.noreply.github.com"
+      # git config --global user.name "github-actions[bot]"
+      # git remote set-url origin git@github.com:Lamintun/distributed-repo-base.git
 
       - name: Commit and Push changes
         env:
@@ -84,15 +87,23 @@ jobs:
         run: |
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git config --global user.name "github-actions[bot]"
-  
+
+          # Create a temporary file for the SSH key
+          SSH_KEY_FILE=$(mktemp)
+          echo "$SSH_PRIVATE_KEY" > $SSH_KEY_FILE
+          chmod 600 $SSH_KEY_FILE
+
           # Prepare the SSH command with the private key
-          SSH_COMMAND="ssh -i <(echo \"$SSH_PRIVATE_KEY\") -o IdentitiesOnly=yes -o StrictHostKeyChecking=no"
-  
+          SSH_COMMAND="ssh -i $SSH_KEY_FILE -o IdentitiesOnly=yes -o StrictHostKeyChecking=no"
+
           # Change to the specific directory
           cd ./distributed-repo-base
-  
+
           # Stage, commit, and push changes
           git add .
           git commit -m "Commit message"
           git remote set-url origin git@github.com:Lamintun/distributed-repo-base.git
           GIT_SSH_COMMAND="$SSH_COMMAND" git push origin main
+
+          # Clean up the SSH key file
+          rm $SSH_KEY_FILE
