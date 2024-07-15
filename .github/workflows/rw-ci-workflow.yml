@@ -98,3 +98,4 @@ jobs:
         with:
           ssh: true
           directory: ./distributed-repo-base
+          repository: Lamintun/distributed-repo-base
