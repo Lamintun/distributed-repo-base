@@ -51,3 +51,26 @@ jobs:
       - name: Check Files 2
         run:  |
             ls -R
+
+      - name: Copy TLA folder from repo-A to repo-base
+        run: |
+          cp -r ${{ inputs.Repository }}/${{inputs.TLA}}/* distributed-repo-base/path/openapi_specifications/${{inputs.TLA}}/
+
+      - name: Configure git
+        run: |
+          cd distributed-repo-base
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Commit changes
+        run: |
+          cd distributed-repo-base
+          git add .
+          git commit -m "Sync TLA folder from ${{ inputs.Repository }}"
+
+      - name: Push changes
+        run: |
+          cd distributed-repo-base
+          git push origin main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
