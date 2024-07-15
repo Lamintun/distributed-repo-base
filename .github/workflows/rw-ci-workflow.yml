@@ -27,7 +27,7 @@ jobs:
       - name: Checkout repo-A
         uses: actions/checkout@v2
         with:
-          repository: Lamintun/distributed-repo-branch-a
+          repository: ${{inputs.Repo_Name}}
           path: distributed-repo-branch-a
 
       - name: Check Files 1
