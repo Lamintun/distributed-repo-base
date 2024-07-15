@@ -8,7 +8,7 @@ on:
         type: string
         required: true
 
-      Repo_Name:
+      Repository:
         description: 'The Repo name of API owners'
         type: string
         required: true   
@@ -22,7 +22,7 @@ jobs:
       - name: Checkout repo-A
         uses: actions/checkout@v2
         with:
-          repository: ${{inputs.Repo_Name}}
+          repository: ${{inputs.Repository}}
           path: distributed-repo-branch-a
 
       - name: Check Files 1
