@@ -23,7 +23,6 @@ jobs:
         uses: actions/checkout@v2
         with:
           repository: ${{inputs.Repository}}
-          path: distributed-repo-branch-a
 
       - name: Check Files 1
         uses: |
@@ -33,7 +32,6 @@ jobs:
         uses: actions/checkout@v2
         with:
           repository: Lamintun/distributed-repo-base
-          path: distributed-repo-base
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Check Files 2
