@@ -50,7 +50,7 @@ jobs:
           repository: Lamintun/distributed-repo-base
           path: distributed-repo-base
           ssh-key: ${{ secrets.SSH_KEY }}
-
+          persist-credentials: true
 
       - name: Check Files 2
         run:  |
@@ -89,7 +89,7 @@ jobs:
           git commit -m "Sync TLA folder from ${{ inputs.Repository }}"
           git push origin main
         # env:
-        #   github_token: ${{ secrets.SSH_KEY }}        
+        #   ssh-key: ${{ secrets.SSH_KEY }}
 
 
       # - name: Push changes
