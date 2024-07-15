@@ -96,6 +96,5 @@ jobs:
       - name: Push changes
         uses: ad-m/github-push-action@master
         with:
-          ssh: true          
-          branch: ${{ github.ref }}
+          ssh: true
           directory: ./distributed-repo-base
