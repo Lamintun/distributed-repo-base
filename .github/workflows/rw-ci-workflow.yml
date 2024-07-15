@@ -54,7 +54,7 @@ jobs:
 
       - name: Copy TLA folder from repo-A to repo-base
         run: |
-          cp -r ${{ inputs.Repository }}/${{inputs.TLA}}/* distributed-repo-base/path/openapi_specifications/${{inputs.TLA}}/
+          cp -r ${{ inputs.Repository }}/${{inputs.TLA}}/* distributed-repo-base/openapi_specifications/
 
       - name: Configure git
         run: |
