@@ -37,7 +37,7 @@ jobs:
           repository: ${{inputs.Repository}}
 
       - name: Check Files 1
-        uses: |
+        run:  |
           ls -R
 
       - name: Checkout repo-base
@@ -47,5 +47,5 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Check Files 2
-        uses: |
+        run:  |
             ls -R
